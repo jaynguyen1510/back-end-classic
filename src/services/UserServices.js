@@ -1,16 +1,40 @@
-const createUser = () => {
-    return new Promise((resolve, reject) => {
+const User = require("../models/UserModel");
+
+const createUser = (newUser) => {
+    return new Promise(async (resolve, reject) => {
+        const { name, email, password, confirmPassword, phone } = newUser
         try {
-            resolve({
-                name: "Nhật Nam",
-                email: "nhocnampro0789@gmail.com",
-                password: "123",
-                isAdmin: true,
-                phone: 1234567890,
+            const checkUser = await User.findOne({
+                email: email,
             })
+            if (checkUser !== null) {
+                resolve({
+                    status: "ok",
+                    message: "email already exists",
+                })
+            }
+            const createdUser = await User.create({
+                name,
+                email,
+                password,
+                confirmPassword,
+                phone
+            })
+            if (createdUser) {
+                resolve({
+                    status: "success",
+                    message: "create user success",
+                    data: createdUser
+                })
+
+            }
+
         } catch (e) {
             reject(e)
         }
     })
 }
-module.exports = { createUser }
+
+module.exports = {
+    createUser
+}
