@@ -5,6 +5,7 @@ const routes = require('./routes');
 // const bodyParser = require('body-parser');
 
 dotenv.config();
+// process.env.TOKEN_SECRET;
 
 const app = express();
 const port = process.env.PORT || 3001;
