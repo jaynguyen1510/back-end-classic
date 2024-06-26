@@ -79,7 +79,9 @@ const deleteProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
     try {
-        const response = await ProductService.getAllProducts();
+        const { limit, page } = req.query
+
+        const response = await ProductService.getAllProducts(Number(limit), Number(page));
         return res.status(200).json(response);
     } catch (e) {
         return res.status(400).json({

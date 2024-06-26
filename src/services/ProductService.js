@@ -77,20 +77,30 @@ const deleteProduct = (id) => {
         }
     })
 }
-const getAllProducts = () => {
+const getAllProducts = async (limit = 8, page = 0) => {
+    console.log("page", page);
     return new Promise(async (resolve, reject) => {
         try {
-            const getAllProducts = await ProductModel.find()
+            const totalProducts = await ProductModel.countDocuments();
+            const products = await ProductModel.find().limit(limit).skip(page * limit);
             resolve({
                 status: "OK",
                 message: "GET ALL PRODUCT SUCCESS",
-                data: getAllProducts
+                data: products,
+                total: totalProducts,
+                pageCurrent: Number(page + 1),
+                totalPages: Math.ceil(totalProducts / limit),
             });
         } catch (e) {
-            reject(e)
+            reject({
+                status: "ERROR",
+                message: "GET ALL PRODUCT FAILED",
+                error: e.message
+            });
         }
     })
-}
+};
+
 const getDetailsProduct = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
