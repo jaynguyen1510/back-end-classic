@@ -77,29 +77,6 @@ const deleteProduct = (id) => {
         }
     })
 }
-const getAllProducts = async (limit = 8, page = 0) => {
-    console.log("page", page);
-    return new Promise(async (resolve, reject) => {
-        try {
-            const totalProducts = await ProductModel.countDocuments();
-            const products = await ProductModel.find().limit(limit).skip(page * limit);
-            resolve({
-                status: "OK",
-                message: "GET ALL PRODUCT SUCCESS",
-                data: products,
-                total: totalProducts,
-                pageCurrent: Number(page + 1),
-                totalPages: Math.ceil(totalProducts / limit),
-            });
-        } catch (e) {
-            reject({
-                status: "ERROR",
-                message: "GET ALL PRODUCT FAILED",
-                error: e.message
-            });
-        }
-    })
-};
 
 const getDetailsProduct = (id) => {
     return new Promise(async (resolve, reject) => {
@@ -123,6 +100,55 @@ const getDetailsProduct = (id) => {
         }
     })
 }
+const getAllProducts = async (limit = 8, page = 0, sort, filter) => {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            const totalProducts = await ProductModel.countDocuments();
+            if (filter) {
+                const label = filter[0]
+                const allObjectFilter = await ProductModel.find({ [label]: { '$regex': filter[1] } }).limit(limit).skip(page * limit);
+
+                resolve({
+                    status: "OK",
+                    message: "GET ALL PRODUCT SUCCESS",
+                    data: allObjectFilter,
+                    total: totalProducts,
+                    pageCurrent: Number(page + 1),
+                    totalPages: Math.ceil(totalProducts / limit),
+                });
+            }
+            if (sort) {
+                const objects = {}
+                objects[sort[1]] = sort[0]
+                const allProductSort = await ProductModel.find().limit(limit).skip(page * limit).sort(objects);
+                resolve({
+                    status: "OK",
+                    message: "GET ALL PRODUCT SUCCESS",
+                    data: allProductSort,
+                    total: totalProducts,
+                    pageCurrent: Number(page + 1),
+                    totalPages: Math.ceil(totalProducts / limit),
+                });
+            }
+            const products = await ProductModel.find().limit(limit).skip(page * limit)
+            resolve({
+                status: "OK",
+                message: "GET ALL PRODUCT SUCCESS",
+                data: products,
+                total: totalProducts,
+                pageCurrent: Number(page + 1),
+                totalPages: Math.ceil(totalProducts / limit),
+            });
+        } catch (e) {
+            reject({
+                status: "ERROR",
+                message: "GET ALL PRODUCT FAILED",
+                error: e.message
+            });
+        }
+    })
+};
 
 module.exports = {
     createProducts,
