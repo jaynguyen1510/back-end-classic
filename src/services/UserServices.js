@@ -11,7 +11,7 @@ const createUser = (newUser) => {
             })
             if (checkUser !== null) {
                 resolve({
-                    status: "ok",
+                    status: "ERR",
                     message: "email already exists",
                 })
             }
@@ -26,7 +26,7 @@ const createUser = (newUser) => {
             })
             if (createdUser) {
                 resolve({
-                    status: "success",
+                    status: "OK",
                     message: "create user success",
                     data: createdUser
                 })
@@ -41,12 +41,12 @@ const createUser = (newUser) => {
 
 const getLoginUser = (checkUser) => {
     return new Promise(async (resolve, reject) => {
-        const { name, email, password, phone } = checkUser
+        const { email, password } = checkUser
         try {
             const foundUser = await User.findOne({ email: email });
             if (foundUser === null) {
                 resolve({
-                    status: "ok",
+                    status: "ERR",
                     message: "The user is not defined",
                 })
             }
@@ -55,7 +55,7 @@ const getLoginUser = (checkUser) => {
 
             if (!comparePassword) {
                 resolve({
-                    status: "ok",
+                    status: "ERR",
                     message: "The password or user is incorrect",
                 })
             }
@@ -148,7 +148,7 @@ const getDetailsUser = (id) => {
             });
             if (checkUser === null) {
                 resolve({
-                    status: "ok",
+                    status: "OK",
                     message: "The user is not defined",
                 })
             }

@@ -1,8 +1,10 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const mongoose = require('mongoose');
 const routes = require('./routes');
+const cors = require('cors');
+const mongoose = require('mongoose');
 // const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser')
 
 dotenv.config();
 // process.env.TOKEN_SECRET;
@@ -10,7 +12,9 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3001;
 
+app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 routes(app);
 

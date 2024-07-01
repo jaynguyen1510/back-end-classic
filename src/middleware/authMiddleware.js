@@ -5,7 +5,7 @@ dotenv.config()
 const authMiddleWare = (req, res, next) => {
     if (!req.headers.token) {
         return res.status(401).json({
-            status: 'error',
+            status: 'ERR',
             message: 'No token provided'
         });
     }
@@ -14,16 +14,15 @@ const authMiddleWare = (req, res, next) => {
     jwt.verify(token, process.env.ACCESS_TOKEN, function (err, user) {
         if (err) {
             return res.status(404).json({
-                status: 'error',
+                status: 'ERR',
                 message: 'Token is not valid'
             })
         }
-        const { payload } = user
-        if (payload?.isAdmin) {
+        if (user?.isAdmin) {
             next()
         } else {
             return res.status(404).json({
-                status: 'error',
+                status: 'ERR',
                 message: 'Token is not valid'
             })
         }
@@ -33,7 +32,7 @@ const authMiddleWare = (req, res, next) => {
 const authUserMiddleWare = (req, res, next) => {
     if (!req.headers.token) {
         return res.status(401).json({
-            status: 'error',
+            status: 'ERR',
             message: 'No token provided'
         });
     }
@@ -43,16 +42,15 @@ const authUserMiddleWare = (req, res, next) => {
     jwt.verify(token, process.env.ACCESS_TOKEN, function (err, user) {
         if (err) {
             return res.status(404).json({
-                status: 'error',
+                status: 'ERR',
                 message: 'Token is not valid'
             })
         }
-        const { payload } = user
-        if (payload?.isAdmin || payload?.id === userId) {
+        if (user?.isAdmin || user?.id === userId) {
             next()
         } else {
             return res.status(404).json({
-                status: 'error',
+                status: 'ERR',
                 message: 'Token is not valid'
             })
         }

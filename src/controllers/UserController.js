@@ -8,19 +8,19 @@ const createUser = async (req, res) => {
         const reg = /^\w+([-.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
         const isCheckMail = reg.test(email)
 
-        if (!name || !email || !password || !confirmPassword || !phone) {
+        if (!email || !password || !confirmPassword) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERR',
                 message: "The input is required"
             })
         } else if (!isCheckMail) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERR',
                 message: "Input is email"
             })
         } else if (password !== confirmPassword) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERR',
                 message: 'Passwords do not match'
             })
         }
@@ -36,28 +36,30 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
 
     try {
-        const { name, email, password, confirmPassword, phone } = req.body
+        const { email, password } = req.body
         const reg = /^\w+([-.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
         const isCheckMail = reg.test(email)
-
-        if (!name || !email || !password || !phone) {
+        if (!email || !password) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERR',
                 message: "The input is required"
             })
         } else if (!isCheckMail) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERR',
                 message: "Input is email"
-            })
-        } else if (password !== confirmPassword) {
-            return res.status(200).json({
-                status: 'error',
-                message: 'Passwords do not match'
             })
         }
         const response = await UserService.getLoginUser(req.body);
-        return res.status(200).json(response);
+        const { refresh_token, ...newRespond } = response
+        // console.log("response", response);
+        res.cookie("refresh_token", refresh_token, {
+            // expires: new Date(Date.now() + 604800000), // 1 week
+            HttpOnly: true,
+            Secure: false,
+            samesite: "strict"
+        })
+        return res.status(200).json(newRespond);
     } catch (e) {
         return res.status(400).json({
             message: e
@@ -72,7 +74,7 @@ const updateUser = async (req, res) => {
         const data = req.body
         if (!userId) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERR',
                 message: "The userId is required"
             })
         }
@@ -91,7 +93,7 @@ const deleteUser = async (req, res) => {
         const userId = req.params.id
         if (!userId) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERR',
                 message: "The userId is required"
             })
         }
@@ -121,7 +123,7 @@ const getDetailsUser = async (req, res) => {
         const userId = req.params.id
         if (!userId) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERR',
                 message: "The userId is required"
             })
         }
@@ -135,23 +137,26 @@ const getDetailsUser = async (req, res) => {
 }
 
 const refreshToken = async (req, res) => {
-
+    console.log("token", req.cookies.refresh_token);
     try {
-        const token = req.headers.token.split(' ')[1]
+        const token = req.cookies.refresh_token;
+        console.log("token", token);
         if (!token) {
-            return res.status(200).json({
-                status: 'error',
+            return res.status(400).json({
+                status: 'ERR',
                 message: "The token is required"
-            })
+            });
         }
         const response = await JwtService.refreshTokenJwtService(token);
         return res.status(200).json(response);
     } catch (e) {
         return res.status(400).json({
-            message: e
-        })
+            status: 'ERR',
+            message: e.message || 'Something went wrong',
+        });
     }
 }
+
 
 module.exports = {
     createUser,
