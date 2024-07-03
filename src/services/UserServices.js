@@ -86,7 +86,7 @@ const updateUser = (id, data) => {
 
             if (foundUser === null) {
                 resolve({
-                    status: "ok",
+                    status: "OK",
                     message: "The user is not defined",
                 })
             }
