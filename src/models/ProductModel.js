@@ -30,6 +30,12 @@ const productSchema = new mongoose.Schema(
         description: {
             type: String
         },
+        discount: {
+            type: Number,
+        },
+        selled: {
+            type: Number,
+        }
     },
     {
         timestamps: true,
