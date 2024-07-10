@@ -31,7 +31,7 @@ const authMiddleWare = (req, res, next) => {
 
 const authUserMiddleWare = (req, res, next) => {
     if (!req.headers.token) {
-        return res.status(401).json({
+        return res.status(404).json({
             status: 'ERR',
             message: 'No token provided'
         });
@@ -43,7 +43,7 @@ const authUserMiddleWare = (req, res, next) => {
         if (err) {
             return res.status(404).json({
                 status: 'ERR',
-                message: 'Token is not valid'
+                message: 'Token is not found'
             })
         }
         if (user?.isAdmin || user?.id === userId) {

@@ -119,11 +119,10 @@ const getAllUser = async (req, res) => {
 }
 
 const getDetailsUser = async (req, res) => {
-
     try {
         const userId = req.params.id
         if (!userId) {
-            return res.status(200).json({
+            return res.status(400).json({
                 status: 'ERR',
                 message: "The userId is required"
             })
@@ -138,10 +137,8 @@ const getDetailsUser = async (req, res) => {
 }
 
 const refreshToken = async (req, res) => {
-    console.log("token", req.cookies.refresh_token);
     try {
         const token = req.cookies.refresh_token;
-        console.log("token", token);
         if (!token) {
             return res.status(400).json({
                 status: 'ERR',
