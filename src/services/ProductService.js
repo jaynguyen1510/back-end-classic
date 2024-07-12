@@ -33,10 +33,38 @@ const createProducts = (newProduct) => {
         }
     })
 }
+
+
+
+const getDetailsProduct = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const foundProduct = await ProductModel.findOne({
+                _id: id
+            });
+            if (foundProduct === null) {
+                resolve({
+                    status: "OK",
+                    message: "The product is not defined",
+                })
+            }
+            resolve({
+                status: "OK",
+                message: "SUCCESS",
+                data: foundProduct
+            });
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 const updateProducts = (id, data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const foundProduct = await ProductModel.findOne({ _id: id });
+            const foundProduct = await ProductModel.findOne(
+                { _id: id }
+            );
 
             if (foundProduct === null) {
                 resolve({
@@ -55,6 +83,7 @@ const updateProducts = (id, data) => {
         }
     })
 }
+
 const deleteProduct = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -71,29 +100,6 @@ const deleteProduct = (id) => {
             resolve({
                 status: "OK",
                 message: "DELETE PRODUCT SUCCESS",
-            });
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
-
-const getDetailsProduct = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const foundProduct = await ProductModel.findOne({
-                _id: id
-            });
-            if (foundProduct === null) {
-                resolve({
-                    status: "OK",
-                    message: "The product is not defined",
-                })
-            }
-            resolve({
-                status: "OK",
-                message: "SUCCESS",
-                data: foundProduct
             });
         } catch (e) {
             reject(e)
