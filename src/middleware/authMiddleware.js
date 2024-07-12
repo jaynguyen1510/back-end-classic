@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 dotenv.config()
 
 const authMiddleWare = (req, res, next) => {
-
     if (!req.headers.token) {
         return res.status(404).json({
             status: 'ERR',
@@ -11,16 +10,14 @@ const authMiddleWare = (req, res, next) => {
         });
     }
     const token = req.headers.token.split(' ')[1]
-
     jwt.verify(token, process.env.ACCESS_TOKEN, function (err, user) {
         if (err) {
             return res.status(404).json({
                 status: 'ERR',
-                message: 'Token is not valid'
-            });
+                message: 'Token is not found'
+            })
         }
-        const { payload } = user
-        if (payload?.isAdmin) {
+        if (user?.isAdmin) {
             next()
         } else {
             return res.status(404).json({
@@ -39,8 +36,8 @@ const authUserMiddleWare = (req, res, next) => {
         });
     }
 
-    const token = req.headers.token.split(' ')[1]
     const userId = req.params.id
+    const token = req.headers.token.split(' ')[1]
     jwt.verify(token, process.env.ACCESS_TOKEN, function (err, user) {
         if (err) {
             return res.status(404).json({
