@@ -51,7 +51,7 @@ const getDetailsProduct = async (req, res) => {
         const response = await ProductService.getDetailsProduct(productId);
         return res.status(200).json(response);
     } catch (e) {
-        return res.status(400).json({
+        return res.status(404).json({
             message: e
         })
     }
