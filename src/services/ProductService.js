@@ -33,9 +33,6 @@ const createProducts = (newProduct) => {
         }
     })
 }
-
-
-
 const getDetailsProduct = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -58,7 +55,6 @@ const getDetailsProduct = (id) => {
         }
     })
 }
-
 const updateProducts = (id, data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -168,6 +164,25 @@ const getAllProducts = async (limit = 8, page = 0, sort, filter) => {
         }
     })
 };
+const getAllTypeProducts = async () => {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            const TypeProducts = await ProductModel.distinct('type')
+            resolve({
+                status: "OK",
+                message: "GET ALL PRODUCT SUCCESS",
+                data: TypeProducts,
+            });
+        } catch (e) {
+            reject({
+                status: "ERROR",
+                message: "GET ALL PRODUCT FAILED",
+                error: e.message
+            });
+        }
+    })
+};
 
 module.exports = {
     createProducts,
@@ -175,5 +190,7 @@ module.exports = {
     getDetailsProduct,
     deleteProduct,
     getAllProducts,
-    deleteManyProduct
+    deleteManyProduct,
+    getAllTypeProducts
+
 }

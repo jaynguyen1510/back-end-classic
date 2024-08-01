@@ -89,7 +89,7 @@ const getAllProducts = async (req, res) => {
         );
         return res.status(200).json(response);
     } catch (e) {
-        return res.status(400).json({
+        return res.status(404).json({
             message: e
         })
     }
@@ -112,11 +112,23 @@ const deleteManyProduct = async (req, res) => {
         })
     }
 }
+
+const getAllTypeProducts = async (req, res) => {
+    try {
+        const response = await ProductService.getAllTypeProducts();
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
 module.exports = {
     createProducts,
     updateProducts,
     getDetailsProduct,
     deleteProduct,
     getAllProducts,
-    deleteManyProduct
+    deleteManyProduct,
+    getAllTypeProducts
 }
