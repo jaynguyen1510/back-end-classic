@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 const createProducts = (newProduct) => {
     return new Promise(async (resolve, reject) => {
-        const { name, image, type, price, countInStock, rating, description } = newProduct
+        const { name, image, type, price, countInStock, rating, description, discount } = newProduct
 
         try {
             const checkProduct = await ProductModel.findOne({
@@ -17,7 +17,7 @@ const createProducts = (newProduct) => {
             }
 
             const createdProduct = await ProductModel.create({
-                name, image, type, price, countInStock, rating, description
+                name, image, type, price, countInStock, rating, description, discount
             })
             if (createdProduct) {
                 resolve({
@@ -120,6 +120,7 @@ const getAllProducts = async (limit = 8, page = 0, sort, filter) => {
     return new Promise(async (resolve, reject) => {
         try {
             const totalProducts = await ProductModel.countDocuments();
+            let products = []
             if (filter) {
                 const label = filter[0]
                 const allObjectFilter = await ProductModel.find({ [label]: { '$regex': filter[1] } }).limit(limit).skip(page * limit);
@@ -146,7 +147,12 @@ const getAllProducts = async (limit = 8, page = 0, sort, filter) => {
                     totalPages: Math.ceil(totalProducts / limit),
                 });
             }
-            const products = await ProductModel.find().limit(limit).skip(page * limit)
+            if (!limit) {
+                products = await ProductModel.find()
+            } else {
+
+                products = await ProductModel.find().limit(limit).skip(page * limit)
+            }
             resolve({
                 status: "OK",
                 message: "GET ALL PRODUCT SUCCESS",
