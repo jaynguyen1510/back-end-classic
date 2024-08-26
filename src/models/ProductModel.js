@@ -35,6 +35,9 @@ const productSchema = new mongoose.Schema(
         },
         selled: {
             type: Number,
+        },
+        quality: {
+            type: Number,
         }
     },
     {

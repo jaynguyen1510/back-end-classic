@@ -17,7 +17,14 @@ const createProducts = (newProduct) => {
             }
 
             const createdProduct = await ProductModel.create({
-                name, image, type, price, countInStock, rating, description, discount
+                name,
+                image,
+                type,
+                countInStock: Number(countInStock),
+                rating,
+                description,
+                discount: Number(discount),
+                price,
             })
             if (createdProduct) {
                 resolve({

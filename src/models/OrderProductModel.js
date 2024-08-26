@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const orderSchema = new mongoose.Schema({
-    orderItems:
+    orderSelected:
         [
             {
                 name: { type: String, required: true },
@@ -20,6 +20,10 @@ const orderSchema = new mongoose.Schema({
         city: { type: String, required: true },
         country: { type: String, required: false },
         phone: { type: Number, required: true },
+    },
+    deliveryMethod: { // New field added here
+        type: String,
+        required: true,
     },
     paymentMethod: {
         type: String,
