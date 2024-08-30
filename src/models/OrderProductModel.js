@@ -7,6 +7,7 @@ const orderSchema = new mongoose.Schema({
                 amount: { type: Number, required: true },
                 image: { type: String, required: true },
                 price: { type: Number, required: true },
+                discount: { type: Number, required: false },
                 product: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Product",
@@ -23,7 +24,7 @@ const orderSchema = new mongoose.Schema({
     },
     deliveryMethod: { // New field added here
         type: String,
-        required: true,
+        required: false,
     },
     paymentMethod: {
         type: String,
