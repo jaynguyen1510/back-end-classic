@@ -5,11 +5,13 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser')
 
+
+
 dotenv.config();
 // process.env.TOKEN_SECRET;
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
@@ -26,9 +28,6 @@ mongoose.connect(`${process.env.MONGODB_DB}`)
     .catch((err) => {
         console.log(err);
     });
-
-
-
 
 app.listen(port, () => {
     console.log("server is running on port " + port);

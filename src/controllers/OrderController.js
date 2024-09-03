@@ -4,23 +4,26 @@ const createOrder = async (req, res) => {
     try {
         const { paymentMethod, itemsPrice, shippingPrice, totalPrice, fullName, address, city, phone, deliveryMethod } = req.body;
 
-        // Kiểm tra xem các giá trị có phải là undefined hoặc null
-        if (paymentMethod == null || itemsPrice == null || shippingPrice == null || totalPrice == null || fullName == null || address == null || city == null || phone == null || deliveryMethod == null) {
-            return res.status(200).json({
+        if (!paymentMethod || !itemsPrice || !shippingPrice || !totalPrice || !fullName || !address || !city || !phone || deliveryMethod == null) {
+            return res.status(400).json({
                 status: 'ERR',
                 message: 'The input is required'
             });
         }
 
-        // Nếu tất cả các giá trị đều hợp lệ, tiếp tục xử lý
+        console.log(req.body);
+
         const response = await OrderService.createOrder(req.body);
         return res.status(200).json(response);
     } catch (e) {
-        return res.status(404).json({
-            message: e
+        console.error("Error creating order:", e.message);
+        return res.status(500).json({
+            status: 'ERR',
+            message: 'Internal server error'
         });
     }
 };
+
 
 const getAllOrderDetails = async (req, res) => {
 
