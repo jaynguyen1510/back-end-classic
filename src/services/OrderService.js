@@ -1,7 +1,6 @@
 const Order = require("../models/OrderProductModel");
 const Product = require("../models/ProductModel");
-
-const bcrypt = require("bcrypt");
+const EmailService = require("../services/EmailService");
 
 const createOrder = (newOrder) => {
     return new Promise(async (resolve, reject) => {
@@ -16,6 +15,7 @@ const createOrder = (newOrder) => {
             city,
             isPaid,
             paidAt,
+            email,
             phone,
             user,
             deliveryMethod, // Get deliveryMethod from newOrder
@@ -85,7 +85,7 @@ const createOrder = (newOrder) => {
                 totalPrice,
                 user, // Add user to the order
             });
-
+            await EmailService.sendEmailCreateOrder(email, orderSelected, fullName, shippingPrice, itemsPrice, totalPrice);
             if (createdOrder) {
                 resolve({
                     status: "OK",

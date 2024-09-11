@@ -20,7 +20,6 @@ app.use(cookieParser());
 
 routes(app);
 
-console.log(process.env.CLIENT_ID, "Hello");
 mongoose.connect(`${process.env.MONGODB_DB}`)
     .then(() => {
         console.log("connect Db successfully");

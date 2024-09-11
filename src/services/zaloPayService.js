@@ -57,7 +57,7 @@ const createPayment = async (orderDetails) => {
 
     // Khai báo và khởi tạo `embed_data` trước khi sử dụng
     const embed_data = {
-        redirecturl: `http://localhost:3000/payment?app_trans_id=${app_trans_id}`, // Sử dụng `transID` thay vì `order.app_trans_id` vì `order` chưa được khai báo
+        redirecturl: `http://localhost:3000/zalopay-success?app_trans_id=${app_trans_id}`, // Sử dụng `transID` thay vì `order.app_trans_id` vì `order` chưa được khai báo
     };
     const order = { // Đảm bảo rằng `order` được khai báo và khởi tạo tại đây
         app_id: config.app_id,

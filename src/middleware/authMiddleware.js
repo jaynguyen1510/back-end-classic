@@ -59,6 +59,7 @@ const authUserMiddleWare = (req, res, next) => {
 
 const authMiddleWareOrder = (req, res, next) => {
     const authHeader = req.headers.token;
+    console.log("auth middleware", authHeader);
 
     // Kiểm tra xem token có tồn tại
     if (!authHeader) {
@@ -98,6 +99,7 @@ const authMiddleWareOrder = (req, res, next) => {
         next();
     });
 };
+
 
 module.exports = {
     authMiddleWare,
