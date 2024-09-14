@@ -18,7 +18,8 @@ const createOrder = (newOrder) => {
             email,
             phone,
             user,
-            deliveryMethod, // Get deliveryMethod from newOrder
+            deliveryMethod,
+            app_trans_id// Get deliveryMethod from newOrder
         } = newOrder;
 
         try {
@@ -83,6 +84,7 @@ const createOrder = (newOrder) => {
                 isPaid,
                 paidAt,
                 totalPrice,
+                app_trans_id,
                 user, // Add user to the order
             });
             await EmailService.sendEmailCreateOrder(email, orderSelected, fullName, shippingPrice, itemsPrice, totalPrice);
@@ -203,10 +205,24 @@ const cancelDetailsOrder = async (id, data) => {
     }
 };
 
-
+const getAllOrder = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allOrder = await Order.find()
+            resolve({
+                status: "OK",
+                message: "GET ALL Order SUCCESS",
+                data: allOrder
+            });
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 module.exports = {
     createOrder,
     getAllOrderDetails,
     getDetailsOrder,
-    cancelDetailsOrder
+    cancelDetailsOrder,
+    getAllOrder
 }

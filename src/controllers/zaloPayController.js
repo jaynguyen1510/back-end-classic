@@ -1,5 +1,5 @@
 const zaloPayService = require('../services/zaloPayService');
-
+// create
 const createZaloPayPayment = async (req, res) => {
     // console.log("Dữ liệu đầu vào:", req.body); // Log dữ liệu nhận từ client
 
@@ -18,9 +18,6 @@ const createZaloPayPayment = async (req, res) => {
     }
 };
 
-
-
-
 const handleCallback = (req, res) => {
     try {
         const callbackData = req.body;
@@ -38,8 +35,38 @@ const orderSuccess = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 };
+
+// refund 
+const refundOrderZaloPay = async (req, res) => {
+    const { zp_trans_id, amount, description } = req.params; // Lấy các tham số từ URL
+
+    try {
+        // Gọi service để thực hiện refund
+        const result = await zaloPayService.refundOrderZaloPay(zp_trans_id, amount, description);
+        return res.status(200).json(result); // Trả về kết quả thành công
+    } catch (error) {
+        return res.status(500).json({ message: error.message }); // Trả về lỗi nếu có vấn đề xảy ra
+    }
+};
+
+// Controller to handle refund status query
+const queryRefundZaloPay = async (req, res) => {
+    const { m_refund_id } = req.params; // Get m_refund_id from the URL
+    console.log("test", { m_refund_id });
+
+    try {
+        // Call service to query refund status
+        const result = await zaloPayService.queryRefundZaloPay(m_refund_id);
+        return res.status(200).json(result); // Return success response
+    } catch (error) {
+        return res.status(500).json({ message: error.message }); // Return error response
+    }
+};
+
 module.exports = {
     createZaloPayPayment,
     handleCallback,
-    orderSuccess
+    orderSuccess,
+    refundOrderZaloPay,
+    queryRefundZaloPay
 };

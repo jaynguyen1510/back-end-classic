@@ -30,6 +30,10 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    app_trans_id: {
+        type: String,
+        required: false,
+    },
     itemsPrice: { type: Number, required: true },
     shippingPrice: { type: Number, required: true },
     taxPrice: { type: Number, required: false },

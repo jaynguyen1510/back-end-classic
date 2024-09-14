@@ -53,7 +53,10 @@ const createPayment = async (orderDetails) => {
         ? roundAmount(orderDetails.itemsPrice)
         : 5000000; // Ví dụ: 50,000.00 VND = 5000000
 
-
+    // Kiểm tra xem số tiền có phải là số nguyên
+    if (!Number.isInteger(amount)) {
+        throw new Error('Số tiền không phải là số nguyên.');
+    }
 
     // Khai báo và khởi tạo `embed_data` trước khi sử dụng
     const embed_data = {
@@ -66,7 +69,7 @@ const createPayment = async (orderDetails) => {
         app_time: Date.now(),
         item: JSON.stringify(items),
         embed_data: JSON.stringify(embed_data),
-        amount: amount,
+        amount: Number(amount),
         description: description,
         bank_code: "",
         callback_url: " https://7895-171-252-155-58.ngrok-free.app/api/zalopay/callback"
@@ -152,9 +155,58 @@ const orderSuccess = async (app_trans_id) => {
         throw new Error(error.message);
     }
 };
+// refund
 
+const refundOrderZaloPay = async (zpTransId, amount, description) => {
+    const timestamp = Date.now();
+    const uid = `${timestamp}${Math.floor(111 + Math.random() * 999)}`;
+
+    let params = {
+        app_id: Number(config.app_id),
+        m_refund_id: `${moment().format('YYMMDD')}_${config.app_id}_${uid}`,
+        zp_trans_id: String(zpTransId),
+        amount: Number(amount), // Đảm bảo số nguyên
+        description: String(description),
+        timestamp,
+    };
+    console.log("params", params);
+
+    const data = `${params.app_id}|${params.zp_trans_id}|${params.amount}|${params.description}|${params.timestamp}`;
+    params.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
+
+    try {
+        const response = await axios.post(config.endpoint3, params);
+        return response.data;
+    } catch (error) {
+        throw new Error(`Refund failed: ${error.message}`);
+    }
+};
+
+// Service to query a refund status
+const queryRefundZaloPay = async (mRefundId) => {
+    const timestamp = Date.now();
+    const params = {
+        app_id: Number(config.app_id),
+        m_refund_id: mRefundId,
+        timestamp
+    };
+    console.log("params", params);
+    // Prepare the data for generating the HMAC signature
+    const data = `${params.app_id}|${params.m_refund_id}|${params.timestamp}`;
+    params.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
+
+    try {
+        // Make a POST request to the ZaloPay API
+        const response = await axios.post(config.endpoint4, params);
+        return response.data;
+    } catch (error) {
+        throw new Error(`Refund query failed: ${error.message}`);
+    }
+};
 module.exports = {
     createPayment,
     handleCallback,
-    orderSuccess
+    orderSuccess,
+    refundOrderZaloPay,
+    queryRefundZaloPay
 };
