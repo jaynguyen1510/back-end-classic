@@ -52,13 +52,16 @@ const loginUser = async (req, res) => {
         const response = await UserService.getLoginUser(req.body);
         const { refresh_token, ...newRespond } = response
         // console.log("response", response);
+        const refreshToken = refresh_token; // Lưu giá trị refresh_token vào biến refreshToken
+        console.log("refreshToken", refreshToken); // Log giá trị của refreshToken
         res.cookie("refresh_token", refresh_token, {
             // expires: new Date(Date.now() + 604800000), // 1 week
             HttpOnly: true,
             Secure: false,
             samesite: "strict"
-        })
-        return res.status(200).json(newRespond);
+        });
+
+        return res.status(200).json({ ...newRespond, refresh_token });
     } catch (e) {
         return res.status(400).json({
             message: e
@@ -149,7 +152,8 @@ const getDetailsUser = async (req, res) => {
 }
 const refreshToken = async (req, res) => {
     try {
-        const token = req.cookies.refresh_token;
+        const token = req.headers.token.split(' ')[1];
+
         if (!token) {
             return res.status(400).json({
                 status: 'ERR',
