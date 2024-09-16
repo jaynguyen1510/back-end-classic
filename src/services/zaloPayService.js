@@ -72,7 +72,7 @@ const createPayment = async (orderDetails) => {
         amount: Number(amount),
         description: description,
         bank_code: "",
-        callback_url: " https://7895-171-252-155-58.ngrok-free.app/api/zalopay/callback"
+        callback_url: " https://the-classic-clothing.vercel.app/api/zalopay/callback"
     };
 
     const data = config.app_id + "|" + order.app_trans_id + "|" + order.app_user + "|" + order.amount + "|" + order.app_time + "|" + order.embed_data + "|" + order.item;
